@@ -16,7 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.opencv.android.BaseLoaderCallback;
@@ -59,6 +60,10 @@ public class OrbTest extends CameraActivity implements CameraBridgeViewBase.CvCa
     };
 
 
+    @Override
+    protected List<? extends CameraBridgeViewBase> getCameraViewList() {
+        return Collections.singletonList(mOpenCvCameraView);
+    }
     /**
      * Called when the activity is first created.
      */
@@ -85,7 +90,7 @@ public class OrbTest extends CameraActivity implements CameraBridgeViewBase.CvCa
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_java_surface_view);
         mOpenCvCameraView.setMaxFrameSize(640, 480);
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         //opengl图层
@@ -166,7 +171,7 @@ public class OrbTest extends CameraActivity implements CameraBridgeViewBase.CvCa
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
@@ -202,6 +207,7 @@ public class OrbTest extends CameraActivity implements CameraBridgeViewBase.CvCa
      * @return
      */
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        Log.d(TAG,"onCameraFrame");
         Mat rgb = inputFrame.rgba();
         float[] poseMatrix = CVTest(rgb.getNativeObjAddr()); //从slam系统获得相机位姿矩阵
 

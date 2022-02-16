@@ -59,7 +59,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
     public CameraBridgeViewBase(Context context, int cameraId) {
         super(context);
-        mCameraIndex = cameraId;
+        mCameraIndex = CAMERA_ID_BACK;
         getHolder().addCallback(this);
         mMaxWidth = MAX_UNSPECIFIED;
         mMaxHeight = MAX_UNSPECIFIED;
@@ -313,14 +313,14 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
      * Called when mSyncObject lock is held
      */
     private void checkCurrentState() {
-        Log.d(TAG, "call checkCurrentState");
         int targetState;
-
+        Log.d(TAG, "mEnabled "+mEnabled + " mCameraPermissionGranted  "+mCameraPermissionGranted +" mSurfaceExist "+mSurfaceExist+ " getVisibility() "+getVisibility() );
         if (mEnabled && mCameraPermissionGranted && mSurfaceExist && getVisibility() == VISIBLE) {
             targetState = STARTED;
         } else {
             targetState = STOPPED;
         }
+        Log.d(TAG, "call checkCurrentState"+" mState "+mState +" targetState "+targetState );
 
         if (targetState != mState) {
             /* The state change detected. Need to exit the current state and enter target state */
@@ -402,6 +402,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
      * @param frame - the current frame to be delivered
      */
     protected void deliverAndDrawFrame(CvCameraViewFrame frame) {
+        Log.e(TAG, "deliverAndDrawFrame");
         Mat modified;
 
         if (mListener != null) {
